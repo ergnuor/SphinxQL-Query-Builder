@@ -128,14 +128,14 @@ class Connection extends ConnectionBase
                 } catch (\PDOException $exception) {
                     throw new DatabaseException($exception->getMessage() .' [ '.implode(';', $queue).']');
                 }
-                if ($statement->columnCount()) {
+                /*if ($statement->columnCount()) {
                     $set = ResultSet::make($statement);
                     $rowset = $set->getStored();
                 } else {
                     $rowset = $statement->rowCount();
-                }
+                }*/
 
-                $result[$count] = $rowset;
+                $result[$count] = ResultSet::make($statement)->store();
                 $count++;
             }
 
