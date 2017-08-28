@@ -14,6 +14,8 @@ class MultiResultSetAdapter implements \Foolz\SphinxQL\Drivers\MultiResultSetAda
      */
     protected $statement = null;
 
+    protected $cursor = 0;
+
     public function __construct($statement)
     {
         $this->statement = $statement;
@@ -21,11 +23,21 @@ class MultiResultSetAdapter implements \Foolz\SphinxQL\Drivers\MultiResultSetAda
 
     public function getNext()
     {
-        if (
-            !$this->valid() ||
-            !$this->statement->nextRowset()
-        ) {
-            $this->valid = false;
+        if(version_compare(PHP_VERSION, '5.4.0', '>=')) {
+            if (
+                !$this->valid() ||
+                !$this->statement->nextRowset()
+            ) {
+                $this->valid = false;
+            }
+        } else {
+            $this->cursor++;
+            if (
+                !$this->valid() ||
+                !$this->statement[$this->cursor]
+            ) {
+                $this->valid = false;
+            }
         }
     }
 
@@ -34,7 +46,11 @@ class MultiResultSetAdapter implements \Foolz\SphinxQL\Drivers\MultiResultSetAda
      */
     public function current()
     {
-        return ResultSet::make($this->statement);
+        if(version_compare(PHP_VERSION, '5.4.0', '>=')) {
+            return ResultSet::make($this->statement);
+        } else {
+            return ResultSet::make($this->statement[$this->cursor]);
+        }
     }
 
     /**

@@ -135,7 +135,7 @@ class Connection extends ConnectionBase
                     $rowset = $statement->rowCount();
                 }*/
 
-                $result[$count] = ResultSet::make($statement)->store();
+                $result[$count] = $statement;
                 $count++;
             }
 
