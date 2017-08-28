@@ -109,7 +109,7 @@ class Connection extends ConnectionBase
         $result = array();
         $count = 0;
 
-        if(true || version_compare(PHP_VERSION, '5.4.0', '>='))
+        if(version_compare(PHP_VERSION, '5.4.0', '>='))
         {
             try {
                 $statement = $this->connection->query(implode(';', $queue));
